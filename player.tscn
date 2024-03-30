@@ -1,0 +1,93 @@
+[gd_scene load_steps=14 format=3 uid="uid://c8ap4x8xq05su"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_lu8qr"]
+[ext_resource type="Script" path="res://PlayerInputSynchronizer.gd" id="2_b1c16"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q57cc"]
+albedo_color = Color(0, 1, 1, 1)
+
+[sub_resource type="TextMesh" id="TextMesh_a4084"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_q57cc")
+text = "dummy"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hfdab"]
+albedo_color = Color(0.537255, 0.721569, 0.937255, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5qpuj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ru4ix"]
+albedo_color = Color(0.619608, 0.67451, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_dexgm"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wglpa"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ygnj2"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_iobjl"]
+size = Vector3(1, 2, 1)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_oxmf3"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:player_peer_id")
+properties/2/spawn = true
+properties/2/replication_mode = 0
+properties/3/path = NodePath(".:player_dummy_name")
+properties/3/spawn = true
+properties/3/replication_mode = 0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4u3cb"]
+properties/0/path = NodePath("PlayerInputSynchronizer:direction")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("PlayerInputSynchronizer:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("PlayerInputSynchronizer:jumping")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_lu8qr")
+
+[node name="Pivot" type="Node3D" parent="."]
+
+[node name="dummy" type="MeshInstance3D" parent="Pivot"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.05011, 0)
+mesh = SubResource("TextMesh_a4084")
+
+[node name="body" type="MeshInstance3D" parent="Pivot"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_hfdab")
+mesh = SubResource("BoxMesh_5qpuj")
+
+[node name="head" type="MeshInstance3D" parent="Pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+material_override = SubResource("StandardMaterial3D_ru4ix")
+mesh = SubResource("SphereMesh_dexgm")
+
+[node name="gun" type="MeshInstance3D" parent="Pivot"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.8, 0.396356, 0.392295, -0.853538)
+material_override = SubResource("StandardMaterial3D_wglpa")
+mesh = SubResource("BoxMesh_ygnj2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_iobjl")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="PlayerPosSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_oxmf3")
+
+[node name="PlayerInputSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_4u3cb")
+script = ExtResource("2_b1c16")
