@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://c8ap4x8xq05su"]
+[gd_scene load_steps=15 format=3 uid="uid://c8ap4x8xq05su"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_lu8qr"]
 [ext_resource type="Script" path="res://PlayerInputSynchronizer.gd" id="2_b1c16"]
@@ -25,8 +25,12 @@ albedo_color = Color(0.619608, 0.67451, 1, 1)
 albedo_color = Color(0, 0, 0, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_ygnj2"]
+size = Vector3(0.2, 0.2, 0.8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_iobjl"]
+size = Vector3(0.2, 0.2, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kanc0"]
 size = Vector3(1, 2, 1)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_oxmf3"]
@@ -44,15 +48,9 @@ properties/3/spawn = true
 properties/3/replication_mode = 0
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4u3cb"]
-properties/0/path = NodePath("PlayerInputSynchronizer:direction")
+properties/0/path = NodePath("PlayerInputSynchronizer:input_data")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath("PlayerInputSynchronizer:rotation")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath("PlayerInputSynchronizer:jumping")
-properties/2/spawn = true
-properties/2/replication_mode = 1
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_lu8qr")
@@ -74,13 +72,23 @@ material_override = SubResource("StandardMaterial3D_ru4ix")
 mesh = SubResource("SphereMesh_dexgm")
 
 [node name="gun" type="MeshInstance3D" parent="Pivot"]
-transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.8, 0.396356, 0.392295, -0.853538)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.401257, 0.392295, -0.902553)
 material_override = SubResource("StandardMaterial3D_wglpa")
 mesh = SubResource("BoxMesh_ygnj2")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+[node name="RayEnd" type="Node3D" parent="Pivot/gun"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.383041)
+
+[node name="RayStart" type="Node3D" parent="Pivot/gun"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.281547)
+
+[node name="GunCollision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.401257, 0.392295, -0.902553)
 shape = SubResource("BoxShape3D_iobjl")
+
+[node name="BodyCollision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_kanc0")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

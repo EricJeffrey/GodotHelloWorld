@@ -1,6 +1,7 @@
 extends CharacterBody3D
 
-const SPEED = 5.0
+const SPEED_WALK = 5.0
+const SPEED_RUN = 10.0
 const JUMP_VELOCITY = 5
 # Get the GRAVITY from the project settings to be synced with RigidBody nodes.
 const GRAVITY = 10
@@ -28,30 +29,42 @@ func _ready():
 		$Camera3D.current = true
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
-# both server and clients will perform this
-func _physics_process(delta):
-	# handle falling
-	if not is_on_floor():
-		velocity.y -= GRAVITY * delta
-	elif inputSync.jumping:
-		# handle jumping
-		velocity.y = JUMP_VELOCITY
-	# reset jump
-	inputSync.jumping = false
+func update_movement(input_data):
+	# check walk or run
+	var speed = SPEED_RUN if input_data.accelerating else SPEED_WALK
 	# handle move
-	var input_direction = inputSync.direction
+	var input_direction = input_data.direction
 	var direction = (transform.basis * Vector3(input_direction.x, 0, input_direction.y)).normalized()
 	if direction:
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
+		velocity.x = direction.x * speed
+		velocity.z = direction.z * speed
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
+		velocity.x = move_toward(velocity.x, 0, speed)
+		velocity.z = move_toward(velocity.z, 0, speed)
+
+func update_rotation(input_data):
 	# handle rotation
-	var input_rotation = inputSync.rotation
+	var input_rotation = input_data.rotation
 	transform.basis = Basis()
 	rotate_object_local(Vector3(0, 1, 0), input_rotation.x)
 	rotate_object_local(Vector3(1, 0, 0), input_rotation.y)
+
+# both server and clients will perform this
+func _physics_process(delta):
+	var input_data = inputSync.input_data
+
+	# handle falling
+	if not is_on_floor():
+		velocity.y -= GRAVITY * delta
+
+	# handle jumping
+	if input_data.jumping:
+		velocity.y = JUMP_VELOCITY
+	# reset jump
+	input_data.jumping = false
+
+	update_movement(input_data)
+	update_rotation(input_data)
 
 	move_and_slide()
 
