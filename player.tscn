@@ -82,6 +82,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.383041)
 [node name="RayStart" type="Node3D" parent="Pivot/gun"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.281547)
 
+[node name="SpotLight3D" type="SpotLight3D" parent="Pivot/gun"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.383041)
+light_color = Color(0.870588, 0, 0.0117647, 1)
+light_energy = 9.0
+spot_range = 20.0
+spot_attenuation = 0.0796601
+spot_angle = 0.6
+
 [node name="GunCollision" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.401257, 0.392295, -0.902553)
 shape = SubResource("BoxShape3D_iobjl")

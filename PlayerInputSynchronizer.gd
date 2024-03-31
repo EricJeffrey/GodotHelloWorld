@@ -34,6 +34,7 @@ func jump():
 
 @rpc("call_local")
 func shoot():
+	""" this event should be handled in parent """
 	input_data.shooting = true
 
 func _process(_delta):
